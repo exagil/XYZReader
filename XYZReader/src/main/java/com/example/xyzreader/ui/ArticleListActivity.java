@@ -59,7 +59,8 @@ public class ArticleListActivity extends ActionBarActivity implements
     }
 
     private void refresh() {
-        startService(new Intent(this, UpdaterService.class));
+        Intent updaterServiceIntent = new Intent(ArticleListActivity.this, UpdaterService.class);
+        startService(updaterServiceIntent);
     }
 
     @Override
@@ -67,6 +68,13 @@ public class ArticleListActivity extends ActionBarActivity implements
         super.onStart();
         registerReceiver(mRefreshingReceiver,
                 new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
+    }
+
+    @Override
+    protected void onPause() {
+        Intent updaterServiceIntent = new Intent(ArticleListActivity.this, UpdaterService.class);
+        stopService(updaterServiceIntent);
+        super.onPause();
     }
 
     @Override
