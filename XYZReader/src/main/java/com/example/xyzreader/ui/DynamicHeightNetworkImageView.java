@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import com.android.volley.toolbox.NetworkImageView;
 
 public class DynamicHeightNetworkImageView extends NetworkImageView {
-    private float mAspectRatio = 1.5f;
+    private float aspectRatio = 1.5f;
 
     public DynamicHeightNetworkImageView(Context context) {
         super(context);
@@ -21,7 +21,7 @@ public class DynamicHeightNetworkImageView extends NetworkImageView {
     }
 
     public void setAspectRatio(float aspectRatio) {
-        mAspectRatio = aspectRatio;
+        this.aspectRatio = aspectRatio;
         requestLayout();
     }
 
@@ -29,6 +29,6 @@ public class DynamicHeightNetworkImageView extends NetworkImageView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int measuredWidth = getMeasuredWidth();
-        setMeasuredDimension(measuredWidth, (int) (measuredWidth / mAspectRatio));
+        setMeasuredDimension(measuredWidth, (int) (measuredWidth / aspectRatio));
     }
 }
