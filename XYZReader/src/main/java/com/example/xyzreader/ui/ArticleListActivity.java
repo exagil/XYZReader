@@ -29,7 +29,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
  * activity presents a grid of items as cards.
  */
 public class ArticleListActivity extends ActionBarActivity implements
-        LoaderManager.LoaderCallbacks<Cursor>, ArticleListView {
+        LoaderManager.LoaderCallbacks<Cursor>, ArticleListView, ArticleListItemClickListener {
 
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -62,14 +62,6 @@ public class ArticleListActivity extends ActionBarActivity implements
     @Override
     public void showProgressBar() {
         progressBar.setVisibility(SmoothProgressBar.VISIBLE);
-    }
-
-    @Override
-    public void disableArticleClick() {
-    }
-
-    @Override
-    public void enableArticleClick() {
     }
 
     @Override
@@ -109,6 +101,11 @@ public class ArticleListActivity extends ActionBarActivity implements
         progressBar.setVisibility(ProgressBar.GONE);
     }
 
+    @Override
+    public void showArticleDetails(long articleId) {
+        startActivity(new Intent(Intent.ACTION_VIEW, ItemsContract.Items.buildItemUri(articleId)));
+    }
+
     private void updateRefreshingUI() {
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
         articleListPresenter.toggleProgressView(mIsRefreshing);
@@ -121,12 +118,7 @@ public class ArticleListActivity extends ActionBarActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        ArticlesAdapter adapter = new ArticlesAdapter(cursor, this, new ArticleListItemClickListener() {
-            @Override
-            public void onArticleListItemClick(long articleId) {
-                startActivity(new Intent(Intent.ACTION_VIEW, ItemsContract.Items.buildItemUri(articleId)));
-            }
-        });
+        ArticlesAdapter adapter = new ArticlesAdapter(cursor, this, this);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
         int columnCount = getResources().getInteger(R.integer.list_column_count);
@@ -138,5 +130,10 @@ public class ArticleListActivity extends ActionBarActivity implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mRecyclerView.setAdapter(null);
+    }
+
+    @Override
+    public void onArticleListItemClick(long articleId) {
+        articleListPresenter.onArticleListItemClick(articleId, mIsRefreshing);
     }
 }

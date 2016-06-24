@@ -11,10 +11,13 @@ public class ArticleListPresenter {
     public void toggleProgressView(boolean isRefreshing) {
         if (isRefreshing) {
             articleListView.showProgressBar();
-            articleListView.disableArticleClick();
         } else {
             articleListView.hideProgressBar();
-            articleListView.enableArticleClick();
         }
+    }
+
+    public void onArticleListItemClick(long articleId, boolean isRefreshing) {
+        if (!isRefreshing)
+            articleListView.showArticleDetails(articleId);
     }
 }

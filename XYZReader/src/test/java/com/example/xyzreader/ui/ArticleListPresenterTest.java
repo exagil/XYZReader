@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class ArticleListPresenterTest {
     @Test
@@ -13,7 +14,6 @@ public class ArticleListPresenterTest {
         boolean isRefreshing = true;
         articleListPresenter.toggleProgressView(isRefreshing);
         verify(articleListView).showProgressBar();
-        verify(articleListView).disableArticleClick();
     }
 
     @Test
@@ -23,6 +23,21 @@ public class ArticleListPresenterTest {
         boolean isRefreshing = false;
         articleListPresenter.toggleProgressView(isRefreshing);
         verify(articleListView).hideProgressBar();
-        verify(articleListView).enableArticleClick();
+    }
+
+    @Test
+    public void testThatArticleDetailsScreenCanBeSeenWhenArticlesAreNotBeingFetched() {
+        ArticleListView articleListView = mock(ArticleListView.class);
+        ArticleListPresenter articleListPresenter = new ArticleListPresenter(articleListView);
+        articleListPresenter.onArticleListItemClick(1l, false);
+        verify(articleListView).showArticleDetails(1l);
+    }
+
+    @Test
+    public void testThatArticleDetailsScreenCannotBeSeenWhenArticlesAreBeingFetched() {
+        ArticleListView articleListView = mock(ArticleListView.class);
+        ArticleListPresenter articleListPresenter = new ArticleListPresenter(articleListView);
+        articleListPresenter.onArticleListItemClick(1l, true);
+        verifyNoMoreInteractions(articleListView);
     }
 }
