@@ -25,7 +25,7 @@
         android:id="@+id/toolbar_container"
         android:layout_width="match_parent"
         android:layout_height="112dp"
-        android:background="?colorPrimary"
+        android:background="#1B2E40"
         android:elevation="8dp">
 
         <android.support.v7.widget.Toolbar
@@ -40,6 +40,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/logo" />
 
@@ -53,13 +54,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar_container"
         android:indeterminate="true"
-        app:spb_color="#FF0000"
+        app:spb_color="#FF1D6C"
         app:spb_mirror_mode="false"
         app:spb_progressiveStart_activated="true"
         app:spb_progressiveStart_speed="1.5"
         app:spb_progressiveStop_speed="3.4"
         app:spb_reversed="false"
-        app:spb_sections_count="4"
+        app:spb_sections_count="3"
         app:spb_speed="2.0"
         app:spb_stroke_separator_length="4dp"
         app:spb_stroke_width="4dp" />
