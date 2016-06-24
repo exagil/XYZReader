@@ -13,11 +13,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.widget.ProgressBar;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
+
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -26,11 +29,14 @@ import com.example.xyzreader.data.UpdaterService;
  * activity presents a grid of items as cards.
  */
 public class ArticleListActivity extends ActionBarActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, ArticleListView {
 
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
+    private SmoothProgressBar progressBar;
+    private ArticleListPresenter articleListPresenter;
+    private ArticlesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +44,9 @@ public class ArticleListActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_article_list);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        progressBar = (SmoothProgressBar) findViewById(R.id.articles_progress_bar);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        articleListPresenter = new ArticleListPresenter(this);
         getLoaderManager().initLoader(0, null, this);
         if (savedInstanceState == null) {
             refresh();
@@ -46,8 +54,22 @@ public class ArticleListActivity extends ActionBarActivity implements
     }
 
     private void refresh() {
+        showProgressBar();
         Intent updaterServiceIntent = new Intent(ArticleListActivity.this, UpdaterService.class);
         startService(updaterServiceIntent);
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(SmoothProgressBar.VISIBLE);
+    }
+
+    @Override
+    public void disableArticleClick() {
+    }
+
+    @Override
+    public void enableArticleClick() {
     }
 
     @Override
@@ -82,8 +104,14 @@ public class ArticleListActivity extends ActionBarActivity implements
         }
     };
 
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(ProgressBar.GONE);
+    }
+
     private void updateRefreshingUI() {
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+        articleListPresenter.toggleProgressView(mIsRefreshing);
     }
 
     @Override
