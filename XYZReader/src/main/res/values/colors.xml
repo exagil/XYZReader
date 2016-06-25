@@ -22,5 +22,5 @@
     <color name="theme_primary_dark">#172636</color>
     <color name="theme_accent">#FF1D6C</color>
     <color name="theme_accent_alternate">#FFAA1D</color>
-    <color name="ltgray">#ffe0e0e0</color>
+    <color name="white">#FFFFFF</color>
 </resources>

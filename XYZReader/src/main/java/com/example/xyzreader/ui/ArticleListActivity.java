@@ -8,19 +8,17 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.widget.ProgressBar;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
-
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -28,40 +26,31 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
  * touched, lead to a {@link ArticleDetailActivity} representing item details. On tablets, the
  * activity presents a grid of items as cards.
  */
-public class ArticleListActivity extends ActionBarActivity implements
-        LoaderManager.LoaderCallbacks<Cursor>, ArticleListView, ArticleListItemClickListener {
+public class ArticleListActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor>, ArticleListView, ArticleListItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private Toolbar mToolbar;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
-    private SmoothProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
     private ArticleListPresenter articleListPresenter;
-    private ArticlesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        progressBar = (SmoothProgressBar) findViewById(R.id.articles_progress_bar);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         articleListPresenter = new ArticleListPresenter(this);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
         getLoaderManager().initLoader(0, null, this);
         if (savedInstanceState == null) {
             refresh();
         }
     }
 
-    private void refresh() {
-        showProgressBar();
-        Intent updaterServiceIntent = new Intent(ArticleListActivity.this, UpdaterService.class);
-        startService(updaterServiceIntent);
-    }
-
     @Override
     public void showProgressBar() {
-        progressBar.setVisibility(SmoothProgressBar.VISIBLE);
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
@@ -98,7 +87,7 @@ public class ArticleListActivity extends ActionBarActivity implements
 
     @Override
     public void hideProgressBar() {
-        progressBar.setVisibility(ProgressBar.GONE);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -107,7 +96,7 @@ public class ArticleListActivity extends ActionBarActivity implements
     }
 
     private void updateRefreshingUI() {
-        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+        swipeRefreshLayout.setRefreshing(mIsRefreshing);
         articleListPresenter.toggleProgressView(mIsRefreshing);
     }
 
@@ -120,20 +109,31 @@ public class ArticleListActivity extends ActionBarActivity implements
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         ArticlesAdapter adapter = new ArticlesAdapter(cursor, this, this);
         adapter.setHasStableIds(true);
-        mRecyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
         int columnCount = getResources().getInteger(R.integer.list_column_count);
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+        recyclerView.setLayoutManager(staggeredGridLayoutManager);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mRecyclerView.setAdapter(null);
+        recyclerView.setAdapter(null);
     }
 
     @Override
     public void onArticleListItemClick(long articleId) {
         articleListPresenter.onArticleListItemClick(articleId, mIsRefreshing);
+    }
+
+    @Override
+    public void onRefresh() {
+        refresh();
+    }
+
+    private void refresh() {
+        showProgressBar();
+        Intent updaterServiceIntent = new Intent(ArticleListActivity.this, UpdaterService.class);
+        startService(updaterServiceIntent);
     }
 }
