@@ -23,12 +23,12 @@ public class ArticleListPresenter {
                 articleListView.showProgressBar();
                 break;
             case UpdaterService.ARTICLES_STATUS_NETWORK_ERROR:
-                articleListView.hideProgressBar();
                 articleListView.onArticlesUpdateFailed("Unable to connect to Internet");
+                articleListView.hideProgressBar();
                 break;
             case UpdaterService.ARTICLES_STATUS_SERVER_ERROR:
-                articleListView.hideProgressBar();
                 articleListView.onArticlesUpdateFailed("Server Error");
+                articleListView.hideProgressBar();
                 break;
             default:
                 articleListView.hideProgressBar();
