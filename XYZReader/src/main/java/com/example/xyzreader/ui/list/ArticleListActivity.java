@@ -95,6 +95,11 @@ public class ArticleListActivity extends AppCompatActivity implements
         startActivity(new Intent(Intent.ACTION_VIEW, ItemsContract.Items.buildItemUri(articleId)));
     }
 
+    @Override
+    public void onArticlesLoadingStarted() {
+
+    }
+
     private void updateRefreshingUI() {
         swipeRefreshLayout.setRefreshing(mIsRefreshing);
         articleListPresenter.toggleProgressView(mIsRefreshing);

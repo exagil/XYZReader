@@ -1,5 +1,6 @@
 package com.example.xyzreader.ui;
 
+import com.example.xyzreader.data.UpdaterService;
 import com.example.xyzreader.ui.list.ArticleListPresenter;
 import com.example.xyzreader.ui.list.ArticleListView;
 
@@ -42,5 +43,13 @@ public class ArticleListPresenterTest {
         ArticleListPresenter articleListPresenter = new ArticleListPresenter(articleListView);
         articleListPresenter.onArticleListItemClick(1l, true);
         verifyNoMoreInteractions(articleListView);
+    }
+
+    @Test
+    public void testThatArticlesLoadingShouldBeStartedWhenArticlesStateIsUnknown() {
+        ArticleListView articleListView = mock(ArticleListView.class);
+        ArticleListPresenter articleListPresenter = new ArticleListPresenter(articleListView);
+        articleListPresenter.onArticlesStateChange(UpdaterService.ARTICLES_STATUS_UNKNOWN);
+        verify(articleListView).onArticlesLoadingStarted();
     }
 }

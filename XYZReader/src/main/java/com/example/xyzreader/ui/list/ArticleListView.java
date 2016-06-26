@@ -6,4 +6,6 @@ public interface ArticleListView {
     void hideProgressBar();
 
     void showArticleDetails(long articleId);
+
+    void onArticlesLoadingStarted();
 }
