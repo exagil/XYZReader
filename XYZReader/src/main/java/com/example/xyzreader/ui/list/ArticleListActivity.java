@@ -104,7 +104,12 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void hideProgressBar() {
-        swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -114,7 +119,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onArticlesUpdateFailed(String errorMessage) {
-        final Snackbar snackbar = Snackbar.make(rootView, errorMessage, Snackbar.LENGTH_LONG);
+        final Snackbar snackbar = Snackbar.make(rootView, errorMessage, Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("Dismiss", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
