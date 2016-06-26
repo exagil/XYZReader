@@ -12,14 +12,6 @@ public class ArticleListPresenter {
         this.articleListView = articleListView;
     }
 
-    public void toggleProgressView(boolean isRefreshing) {
-        if (isRefreshing) {
-            articleListView.showProgressBar();
-        } else {
-            articleListView.hideProgressBar();
-        }
-    }
-
     public void onArticleListItemClick(long articleId, boolean isRefreshing) {
         if (!isRefreshing)
             articleListView.showArticleDetails(articleId);
@@ -28,8 +20,18 @@ public class ArticleListPresenter {
     public void onArticlesStateChange(@ArticlesStatus int articlesStatus) {
         switch (articlesStatus) {
             case UpdaterService.ARTICLES_STATUS_UNKNOWN:
-                articleListView.onArticlesLoadingStarted();
+                articleListView.showProgressBar();
                 break;
+            case UpdaterService.ARTICLES_STATUS_NETWORK_ERROR:
+                articleListView.hideProgressBar();
+                articleListView.onArticlesUpdateFailed("Unable to connect to Internet");
+                break;
+            case UpdaterService.ARTICLES_STATUS_SERVER_ERROR:
+                articleListView.hideProgressBar();
+                articleListView.onArticlesUpdateFailed("Server Error");
+                break;
+            default:
+                articleListView.hideProgressBar();
         }
     }
 }

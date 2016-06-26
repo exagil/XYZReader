@@ -7,5 +7,5 @@ public interface ArticleListView {
 
     void showArticleDetails(long articleId);
 
-    void onArticlesLoadingStarted();
+    void onArticlesUpdateFailed(String errorMessage);
 }

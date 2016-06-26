@@ -12,24 +12,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class ArticleListPresenterTest {
     @Test
-    public void testThatArticleListIsNotClickableWhenProgressBarIsShown() {
-        ArticleListView articleListView = mock(ArticleListView.class);
-        ArticleListPresenter articleListPresenter = new ArticleListPresenter(articleListView);
-        boolean isRefreshing = true;
-        articleListPresenter.toggleProgressView(isRefreshing);
-        verify(articleListView).showProgressBar();
-    }
-
-    @Test
-    public void testThatArticleListIsClickableWhenProgressBarIsNotShown() {
-        ArticleListView articleListView = mock(ArticleListView.class);
-        ArticleListPresenter articleListPresenter = new ArticleListPresenter(articleListView);
-        boolean isRefreshing = false;
-        articleListPresenter.toggleProgressView(isRefreshing);
-        verify(articleListView).hideProgressBar();
-    }
-
-    @Test
     public void testThatArticleDetailsScreenCanBeSeenWhenArticlesAreNotBeingFetched() {
         ArticleListView articleListView = mock(ArticleListView.class);
         ArticleListPresenter articleListPresenter = new ArticleListPresenter(articleListView);
@@ -50,6 +32,32 @@ public class ArticleListPresenterTest {
         ArticleListView articleListView = mock(ArticleListView.class);
         ArticleListPresenter articleListPresenter = new ArticleListPresenter(articleListView);
         articleListPresenter.onArticlesStateChange(UpdaterService.ARTICLES_STATUS_UNKNOWN);
-        verify(articleListView).onArticlesLoadingStarted();
+        verify(articleListView).showProgressBar();
+    }
+
+    @Test
+    public void testThatArticleLoadingShouldFailDueToNetworkErrorWhenNoInternetConnectionPresent() {
+        ArticleListView articleListView = mock(ArticleListView.class);
+        ArticleListPresenter articleListPresenter = new ArticleListPresenter(articleListView);
+        articleListPresenter.onArticlesStateChange(UpdaterService.ARTICLES_STATUS_NETWORK_ERROR);
+        verify(articleListView).hideProgressBar();
+        verify(articleListView).onArticlesUpdateFailed("Unable to connect to Internet");
+    }
+
+    @Test
+    public void testThatArticleLoadingShouldFailDueToServerErrorWhenServerDown() {
+        ArticleListView articleListView = mock(ArticleListView.class);
+        ArticleListPresenter articleListPresenter = new ArticleListPresenter(articleListView);
+        articleListPresenter.onArticlesStateChange(UpdaterService.ARTICLES_STATUS_SERVER_ERROR);
+        verify(articleListView).hideProgressBar();
+        verify(articleListView).onArticlesUpdateFailed("Server Error");
+    }
+
+    @Test
+    public void testThatArticlesShouldBeLoadedWhenStatusSuccessful() {
+        ArticleListView articleListView = mock(ArticleListView.class);
+        ArticleListPresenter articleListPresenter = new ArticleListPresenter(articleListView);
+        articleListPresenter.onArticlesStateChange(UpdaterService.ARTICLES_STATUS_SUCCESS);
+        verify(articleListView).hideProgressBar();
     }
 }

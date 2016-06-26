@@ -28,6 +28,8 @@ public class UpdaterService extends IntentService {
 
     public static final String BROADCAST_ACTION_STATE_CHANGE
             = "com.example.xyzreader.intent.action.STATE_CHANGE";
+    public static final String ARTICLES_STATUS
+            = "articles_status";
     public static final String EXTRA_REFRESHING
             = "com.example.xyzreader.intent.extra.REFRESHING";
 
@@ -43,14 +45,10 @@ public class UpdaterService extends IntentService {
         NetworkInfo ni = cm.getActiveNetworkInfo();
         if (ni == null || !ni.isConnected()) {
             Log.w(TAG, "Not online, not refreshing.");
+            sendStateChangeBroadcast(ARTICLES_STATUS_NETWORK_ERROR, false);
             return;
-        } else {
-
         }
-
-        sendStickyBroadcast(
-                new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true));
-
+        sendStateChangeBroadcast(ARTICLES_STATUS_SUCCESS, true);
         // Don't even inspect the intent, we only do one thing, and that's fetch content.
         ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
 
@@ -81,9 +79,9 @@ public class UpdaterService extends IntentService {
 
         } catch (JSONException | RemoteException | OperationApplicationException e) {
             Log.e(TAG, "Error updating content.", e);
+            sendStateChangeBroadcast(ARTICLES_STATUS_SERVER_ERROR, false);
         }
-        sendStickyBroadcast(
-                new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
+        sendStateChangeBroadcast(ARTICLES_STATUS_SUCCESS, false);
     }
 
     @Retention(RetentionPolicy.SOURCE)
@@ -96,8 +94,10 @@ public class UpdaterService extends IntentService {
     public static final int ARTICLES_STATUS_SUCCESS = 2;
     public static final int ARTICLES_STATUS_SERVER_ERROR = 3;
 
-    private void sendStateChangeBroadcast() {
-        sendStickyBroadcast(
-                new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
+    private void sendStateChangeBroadcast(@ArticlesStatus int articlesStatus, boolean refreshState) {
+        Intent actionStateChangeBroadcastIntent = new Intent(BROADCAST_ACTION_STATE_CHANGE);
+        actionStateChangeBroadcastIntent.putExtra(EXTRA_REFRESHING, refreshState);
+        actionStateChangeBroadcastIntent.putExtra(ARTICLES_STATUS, articlesStatus);
+        sendStickyBroadcast(actionStateChangeBroadcastIntent);
     }
 }

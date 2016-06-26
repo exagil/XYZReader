@@ -8,16 +8,25 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 import com.example.xyzreader.ui.detail.ArticleDetailActivity;
+
+import static com.example.xyzreader.data.UpdaterService.ARTICLES_STATUS;
+import static com.example.xyzreader.data.UpdaterService.ARTICLES_STATUS_SUCCESS;
+import static com.example.xyzreader.data.UpdaterService.ArticlesStatus;
+import static com.example.xyzreader.data.UpdaterService.BROADCAST_ACTION_STATE_CHANGE;
+import static com.example.xyzreader.data.UpdaterService.EXTRA_REFRESHING;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -31,11 +40,13 @@ public class ArticleListActivity extends AppCompatActivity implements
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private ArticleListPresenter articleListPresenter;
+    private View rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_article_list);
+        rootView = LayoutInflater.from(this).inflate(R.layout.activity_article_list, null);
+        setContentView(rootView);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.theme_accent, R.color.theme_accent_alternate);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -50,14 +61,19 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void showProgressBar() {
-        swipeRefreshLayout.setRefreshing(true);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         registerReceiver(mRefreshingReceiver,
-                new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
+                new IntentFilter(BROADCAST_ACTION_STATE_CHANGE));
     }
 
     @Override
@@ -78,9 +94,10 @@ public class ArticleListActivity extends AppCompatActivity implements
     private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
-                mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
-                updateRefreshingUI();
+            if (BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
+                mIsRefreshing = intent.getBooleanExtra(EXTRA_REFRESHING, false);
+                @ArticlesStatus int articlesStatus = intent.getIntExtra(ARTICLES_STATUS, ARTICLES_STATUS_SUCCESS);
+                articleListPresenter.onArticlesStateChange(articlesStatus);
             }
         }
     };
@@ -96,13 +113,14 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onArticlesLoadingStarted() {
-
-    }
-
-    private void updateRefreshingUI() {
-        swipeRefreshLayout.setRefreshing(mIsRefreshing);
-        articleListPresenter.toggleProgressView(mIsRefreshing);
+    public void onArticlesUpdateFailed(String errorMessage) {
+        final Snackbar snackbar = Snackbar.make(rootView, errorMessage, Snackbar.LENGTH_LONG);
+        snackbar.setAction("Dismiss", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        }).setActionTextColor(getResources().getColor(R.color.theme_accent_alternate)).show();
     }
 
     @Override
