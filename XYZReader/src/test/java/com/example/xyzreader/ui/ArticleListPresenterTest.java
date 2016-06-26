@@ -1,5 +1,8 @@
 package com.example.xyzreader.ui;
 
+import com.example.xyzreader.ui.list.ArticleListPresenter;
+import com.example.xyzreader.ui.list.ArticleListView;
+
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;

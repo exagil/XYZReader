@@ -1,4 +1,4 @@
-package com.example.xyzreader.ui;
+package com.example.xyzreader.ui.list;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

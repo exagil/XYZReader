@@ -1,4 +1,4 @@
-package com.example.xyzreader.ui;
+package com.example.xyzreader.ui.list;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
+import com.example.xyzreader.ui.ImageLoaderHelper;
 
 class ArticlesAdapter extends RecyclerView.Adapter<ArticleViewHolder> {
     private Cursor mCursor;

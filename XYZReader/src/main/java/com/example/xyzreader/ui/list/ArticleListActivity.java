@@ -1,4 +1,4 @@
-package com.example.xyzreader.ui;
+package com.example.xyzreader.ui.list;
 
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
@@ -17,6 +17,7 @@ import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
+import com.example.xyzreader.ui.detail.ArticleDetailActivity;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
