@@ -22,6 +22,8 @@ import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 import com.example.xyzreader.ui.detail.ArticleDetailActivity;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.example.xyzreader.data.UpdaterService.ARTICLES_STATUS;
 import static com.example.xyzreader.data.UpdaterService.ARTICLES_STATUS_SUCCESS;
 import static com.example.xyzreader.data.UpdaterService.ArticlesStatus;
@@ -104,12 +106,12 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void hideProgressBar() {
-        swipeRefreshLayout.post(new Runnable() {
+        swipeRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
                 swipeRefreshLayout.setRefreshing(false);
             }
-        });
+        }, TimeUnit.MILLISECONDS.toMillis(1500));
     }
 
     @Override
