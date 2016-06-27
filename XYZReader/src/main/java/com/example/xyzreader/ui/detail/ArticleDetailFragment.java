@@ -9,8 +9,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ShareCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
@@ -54,6 +57,8 @@ public class ArticleDetailFragment extends Fragment implements
     private int scrollY;
     private boolean isCard = false;
     private int statusBarFullOpacityBottom;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private Toolbar toolbar;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -103,6 +108,10 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.article_detail_toolbar);
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        drawInsetsFrameLayout = (DrawInsetsFrameLayout)
 //                rootView.findViewById(R.id.draw_insets_frame_layout);
 //        drawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
@@ -207,6 +216,7 @@ public class ArticleDetailFragment extends Fragment implements
                                 photoView.setImageBitmap(imageContainer.getBitmap());
                                 rootView.findViewById(R.id.meta_bar)
                                         .setBackgroundColor(mutedColor);
+                                collapsingToolbarLayout.setContentScrimColor(mutedColor);
                                 updateStatusBar();
                             }
                         }
