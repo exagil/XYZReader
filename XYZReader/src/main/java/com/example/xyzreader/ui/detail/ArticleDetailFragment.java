@@ -7,7 +7,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
@@ -26,9 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
-import com.example.xyzreader.ui.DrawInsetsFrameLayout;
 import com.example.xyzreader.ui.ImageLoaderHelper;
-import com.example.xyzreader.ui.ObservableScrollView;
 import com.example.xyzreader.ui.list.ArticleListActivity;
 
 /**
@@ -47,12 +44,12 @@ public class ArticleDetailFragment extends Fragment implements
     private long itemId;
     private View rootView;
     private int mutedColor = 0xFF333333;
-//    private ObservableScrollView scrollView;
-    private DrawInsetsFrameLayout drawInsetsFrameLayout;
+    //    private ObservableScrollView scrollView;
+//    private DrawInsetsFrameLayout drawInsetsFrameLayout;
     private ColorDrawable statusBarColorDrawable;
 
     private int topInset;
-    private View photoContainerView;
+    //    private View photoContainerView;
     private ImageView photoView;
     private int scrollY;
     private boolean isCard = false;
@@ -106,14 +103,14 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-        drawInsetsFrameLayout = (DrawInsetsFrameLayout)
-                rootView.findViewById(R.id.draw_insets_frame_layout);
-        drawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
-            @Override
-            public void onInsetsChanged(Rect insets) {
-                topInset = insets.top;
-            }
-        });
+//        drawInsetsFrameLayout = (DrawInsetsFrameLayout)
+//                rootView.findViewById(R.id.draw_insets_frame_layout);
+//        drawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
+//            @Override
+//            public void onInsetsChanged(Rect insets) {
+//                topInset = insets.top;
+//            }
+//        });
 
 //        scrollView = (ObservableScrollView) rootView.findViewById(R.id.scrollview);
 //        scrollView.setCallbacks(new ObservableScrollView.Callbacks() {
@@ -127,7 +124,7 @@ public class ArticleDetailFragment extends Fragment implements
 //        });
 
         photoView = (ImageView) rootView.findViewById(R.id.photo);
-        photoContainerView = rootView.findViewById(R.id.photo_container);
+//        photoContainerView = rootView.findViewById(R.id.photo_container);
 
         statusBarColorDrawable = new ColorDrawable(0);
 
@@ -158,7 +155,7 @@ public class ArticleDetailFragment extends Fragment implements
                     (int) (Color.blue(mutedColor) * 0.9));
         }
         statusBarColorDrawable.setColor(color);
-        drawInsetsFrameLayout.setInsetBackground(statusBarColorDrawable);
+//        drawInsetsFrameLayout.setInsetBackground(statusBarColorDrawable);
     }
 
     static float progress(float v, float min, float max) {
@@ -257,14 +254,14 @@ public class ArticleDetailFragment extends Fragment implements
         bindViews();
     }
 
-    public int getUpButtonFloor() {
-        if (photoContainerView == null || photoView.getHeight() == 0) {
-            return Integer.MAX_VALUE;
-        }
+//    public int getUpButtonFloor() {
+//        if (photoContainerView == null || photoView.getHeight() == 0) {
+//            return Integer.MAX_VALUE;
+//        }
 
-        // account for parallax
-        return isCard
-                ? (int) photoContainerView.getTranslationY() + photoView.getHeight() - scrollY
-                : photoView.getHeight() - scrollY;
-    }
+    // account for parallax
+//        return isCard
+//                ? (int) photoContainerView.getTranslationY() + photoView.getHeight() - scrollY
+//                : photoView.getHeight() - scrollY;
+//    }
 }

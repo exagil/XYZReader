@@ -140,7 +140,7 @@ public class ArticleDetailActivity extends ActionBarActivity
 
     public void onUpButtonFloorChanged(long itemId, ArticleDetailFragment fragment) {
         if (itemId == selectedItemId) {
-            selectedItemUpButtonFloor = fragment.getUpButtonFloor();
+//            selectedItemUpButtonFloor = fragment.getUpButtonFloor();
             updateUpButtonPosition();
         }
     }
@@ -160,7 +160,7 @@ public class ArticleDetailActivity extends ActionBarActivity
             super.setPrimaryItem(container, position, object);
             ArticleDetailFragment fragment = (ArticleDetailFragment) object;
             if (fragment != null) {
-                selectedItemUpButtonFloor = fragment.getUpButtonFloor();
+//                selectedItemUpButtonFloor = fragment.getUpButtonFloor();
                 updateUpButtonPosition();
             }
         }
