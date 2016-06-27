@@ -47,7 +47,7 @@ public class ArticleDetailFragment extends Fragment implements
     private long itemId;
     private View rootView;
     private int mutedColor = 0xFF333333;
-    private ObservableScrollView scrollView;
+//    private ObservableScrollView scrollView;
     private DrawInsetsFrameLayout drawInsetsFrameLayout;
     private ColorDrawable statusBarColorDrawable;
 
@@ -115,16 +115,16 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        scrollView = (ObservableScrollView) rootView.findViewById(R.id.scrollview);
-        scrollView.setCallbacks(new ObservableScrollView.Callbacks() {
-            @Override
-            public void onScrollChanged() {
-                scrollY = scrollView.getScrollY();
-                getActivityCast().onUpButtonFloorChanged(itemId, ArticleDetailFragment.this);
-                photoContainerView.setTranslationY((int) (scrollY - scrollY / PARALLAX_FACTOR));
-                updateStatusBar();
-            }
-        });
+//        scrollView = (ObservableScrollView) rootView.findViewById(R.id.scrollview);
+//        scrollView.setCallbacks(new ObservableScrollView.Callbacks() {
+//            @Override
+//            public void onScrollChanged() {
+//                scrollY = scrollView.getScrollY();
+//                getActivityCast().onUpButtonFloorChanged(itemId, ArticleDetailFragment.this);
+//                photoContainerView.setTranslationY((int) (scrollY - scrollY / PARALLAX_FACTOR));
+//                updateStatusBar();
+//            }
+//        });
 
         photoView = (ImageView) rootView.findViewById(R.id.photo);
         photoContainerView = rootView.findViewById(R.id.photo_container);
