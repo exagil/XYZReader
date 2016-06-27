@@ -9,24 +9,7 @@
         android:layout_height="240dp"
         android:elevation="6dp">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/article_detail_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:title=""
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:title=""
-            app:titleEnabled="false">
-
-            <include layout="@layout/detail_photo" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin" />
-
-        </android.support.design.widget.CollapsingToolbarLayout>
+        <include layout="@layout/collapsing_toolbar" />
 
     </android.support.design.widget.AppBarLayout>
 

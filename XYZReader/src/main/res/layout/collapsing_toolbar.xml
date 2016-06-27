@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CollapsingToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/article_detail_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:title=""
+    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+    app:title=""
+    app:titleEnabled="false">
+
+    <include layout="@layout/detail_photo" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_collapseMode="pin" />
+
+</android.support.design.widget.CollapsingToolbarLayout>
