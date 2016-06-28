@@ -108,7 +108,10 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.article_detail_toolbar);
+        View collapsingView = rootView.findViewById(R.id.article_detail_toolbar);
+        if (collapsingView != null) {
+            collapsingToolbarLayout = (CollapsingToolbarLayout) collapsingView;
+        }
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -216,7 +219,8 @@ public class ArticleDetailFragment extends Fragment implements
                                 photoView.setImageBitmap(imageContainer.getBitmap());
                                 rootView.findViewById(R.id.meta_bar)
                                         .setBackgroundColor(mutedColor);
-                                collapsingToolbarLayout.setContentScrimColor(mutedColor);
+                                if (collapsingToolbarLayout != null)
+                                    collapsingToolbarLayout.setContentScrimColor(mutedColor);
                                 updateStatusBar();
                             }
                         }
