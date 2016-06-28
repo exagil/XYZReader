@@ -1,5 +1,6 @@
 <resources>
     <!-- detail -->
     <dimen name="detail_photo_height">224dp</dimen>
+    <dimen name="detail_overlay">112dp</dimen>
     <dimen name="detail_horizontal_margin">112dp</dimen>
 </resources>
