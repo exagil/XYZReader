@@ -7,4 +7,5 @@
     <dimen name="detail_metabar_vertical_padding">32dp</dimen>
     <dimen name="detail_metabar_title_bottom_padding">8dp</dimen>
     <dimen name="detail_body_bottom_margin">96dp</dimen>
+    <dimen name="detail_body_padding">16dp</dimen>
 </resources>
