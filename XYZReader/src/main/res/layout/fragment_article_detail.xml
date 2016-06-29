@@ -1,12 +1,14 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="6dp">
+        android:elevation="4dp">
 
         <include layout="@layout/collapsing_toolbar" />
 
@@ -16,6 +18,12 @@
 
     <include layout="@layout/article_body" />
 
-    <include layout="@layout/layout_button_share" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/share_fab"
+        android:elevation="6dp"
+        style="@style/share_fab"
+        app:fabSize="normal"
+        app:layout_anchor="@id/app_bar_layout"
+        app:layout_anchorGravity="bottom|end" />
 
 </android.support.design.widget.CoordinatorLayout>
