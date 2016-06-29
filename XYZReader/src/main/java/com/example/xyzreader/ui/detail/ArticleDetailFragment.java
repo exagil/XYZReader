@@ -30,7 +30,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.ui.ImageLoaderHelper;
-import com.example.xyzreader.ui.ObservableScrollView;
+import com.example.xyzreader.ui.ObservableNestedScrollView;
 import com.example.xyzreader.ui.list.ArticleListActivity;
 
 /**
@@ -49,7 +49,7 @@ public class ArticleDetailFragment extends Fragment implements
     private long itemId;
     private View rootView;
     private int mutedColor = 0xFF333333;
-    private ObservableScrollView scrollView;
+    private ObservableNestedScrollView scrollView;
     //    private DrawInsetsFrameLayout drawInsetsFrameLayout;
     private ColorDrawable statusBarColorDrawable;
 
@@ -105,7 +105,7 @@ public class ArticleDetailFragment extends Fragment implements
         collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.article_detail_toolbar);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         photoView = (ImageView) rootView.findViewById(R.id.photo);
-        scrollView = (ObservableScrollView) rootView.findViewById(R.id.scrollView);
+        scrollView = (ObservableNestedScrollView) rootView.findViewById(R.id.scrollView);
         statusBarColorDrawable = new ColorDrawable(0);
         boolean shouldAddScrollViewTranslations = getResources().getBoolean(R.bool.add_scroll_view_translations);
 
@@ -206,7 +206,7 @@ public class ArticleDetailFragment extends Fragment implements
     }
 
     private void addScrollViewTranslations() {
-        scrollView.setCallbacks(new ObservableScrollView.Callbacks() {
+        scrollView.setCallbacks(new ObservableNestedScrollView.Callbacks() {
             @Override
             public void onScrollChanged() {
                 scrollY = scrollView.getScrollY();

@@ -24,10 +24,10 @@ import android.view.MotionEvent;
 /**
  * A custom ScrollView that can accept a scroll listener.
  */
-public class ObservableScrollView extends NestedScrollView {
+public class ObservableNestedScrollView extends NestedScrollView {
     private Callbacks mCallbacks;
 
-    public ObservableScrollView(Context context, AttributeSet attrs) {
+    public ObservableNestedScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
