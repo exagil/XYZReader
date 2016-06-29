@@ -2,5 +2,5 @@
     <!-- detail -->
     <dimen name="detail_photo_height">224dp</dimen>
     <dimen name="detail_overlay">112dp</dimen>
-    <dimen name="detail_horizontal_margin">200dp</dimen>
+    <dimen name="detail_horizontal_margin">160dp</dimen>
 </resources>

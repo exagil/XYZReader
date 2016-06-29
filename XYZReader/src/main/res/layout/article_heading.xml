@@ -3,15 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:orientation="vertical">
+    android:background="#333"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/detail_metabar_vertical_padding"
+    android:paddingLeft="@dimen/detail_inner_horizontal_margin"
+    android:paddingRight="@dimen/detail_inner_horizontal_margin"
+    android:paddingTop="@dimen/detail_metabar_vertical_padding">
 
     <TextView
         android:id="@+id/article_title"
         style="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/detail_content_horizontal_left_margin"
-        android:layout_marginRight="@dimen/detail_horizontal_margin"
+        android:layout_marginLeft="@dimen/detail_content_horizontal_margin"
+        android:layout_marginRight="@dimen/detail_content_horizontal_margin"
         android:fontFamily="sans-serif-condensed"
         android:lineSpacingMultiplier="0.9"
         android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
@@ -24,8 +29,8 @@
         style="?android:attr/textAppearanceSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/detail_content_horizontal_left_margin"
-        android:layout_marginRight="@dimen/detail_horizontal_margin"
+        android:layout_marginLeft="@dimen/detail_content_horizontal_margin"
+        android:layout_marginRight="@dimen/detail_content_horizontal_margin"
         android:textColor="#8fff" />
 
 </LinearLayout>

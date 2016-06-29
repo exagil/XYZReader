@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="fill_vertical"
-    android:layout_marginLeft="@dimen/detail_content_horizontal_left_margin"
-    android:layout_marginRight="@dimen/detail_horizontal_margin"
     android:layout_marginTop="16dp"
     android:fillViewport="true"
+    android:paddingLeft="@dimen/detail_inner_horizontal_margin"
+    android:paddingRight="@dimen/detail_inner_horizontal_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <FrameLayout
@@ -28,6 +28,8 @@
                 android:id="@+id/article_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_horizontal_margin"
+                android:layout_marginRight="@dimen/detail_horizontal_margin"
                 android:fontFamily="sans-serif"
                 android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
                 android:paddingBottom="@dimen/detail_body_bottom_margin"
