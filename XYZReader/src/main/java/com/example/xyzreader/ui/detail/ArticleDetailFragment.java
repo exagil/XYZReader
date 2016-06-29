@@ -57,7 +57,6 @@ public class ArticleDetailFragment extends Fragment implements
     //    private View photoContainerView;
     private ImageView photoView;
     private int scrollY;
-    private boolean isCard = false;
     private int statusBarFullOpacityBottom;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
@@ -81,12 +80,9 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             itemId = getArguments().getLong(ARG_ITEM_ID);
         }
-
-        isCard = getResources().getBoolean(R.bool.detail_is_card);
         statusBarFullOpacityBottom = getResources().getDimensionPixelSize(
                 R.dimen.detail_card_top_margin);
         setHasOptionsMenu(true);
@@ -99,11 +95,6 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        // In support library r8, calling initLoader for a fragment in a FragmentPagerAdapter in
-        // the fragment's onCreate may cause the same LoaderManager to be dealt to multiple
-        // fragments because their mIndex is -1 (haven't been added to the activity yet). Thus,
-        // we do this in onActivityCreated.
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -111,18 +102,30 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-        View collapsingView = rootView.findViewById(R.id.article_detail_toolbar);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) collapsingView;
+        collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.article_detail_toolbar);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         photoView = (ImageView) rootView.findViewById(R.id.photo);
         scrollView = (ObservableScrollView) rootView.findViewById(R.id.scrollView);
-        setupToolbar();
-        boolean shouldAddScrollViewTranslations = getResources().getBoolean(R.bool.add_scroll_view_translations);
-        if (shouldAddScrollViewTranslations)
-            addScrollViewTranslations();
-
         statusBarColorDrawable = new ColorDrawable(0);
+        boolean shouldAddScrollViewTranslations = getResources().getBoolean(R.bool.add_scroll_view_translations);
 
+        setupToolbar();
+        addFabShareAction();
+        bindViews();
+        updateStatusBar();
+        if (shouldAddScrollViewTranslations) {
+            addScrollViewTranslations();
+        }
+        return rootView;
+    }
+
+    private void setupToolbar() {
+        toolbar.setTitle("");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void addFabShareAction() {
         rootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,58 +135,6 @@ public class ArticleDetailFragment extends Fragment implements
                         .getIntent(), getString(R.string.action_share)));
             }
         });
-
-        bindViews();
-        updateStatusBar();
-        return rootView;
-    }
-
-    private void addScrollViewTranslations() {
-        scrollView.setCallbacks(new ObservableScrollView.Callbacks() {
-            @Override
-            public void onScrollChanged() {
-                scrollY = scrollView.getScrollY();
-                ViewGroup bodyContainer = (ViewGroup) rootView.findViewById(R.id.body_container);
-                getActivityCast().onUpButtonFloorChanged(itemId, ArticleDetailFragment.this);
-                int translationY = (int) (scrollY - scrollY / PARALLAX_FACTOR);
-                bodyContainer.setTranslationY(-translationY);
-                photoView.setTranslationY(translationY * PARALLAX_FACTOR);
-                updateStatusBar();
-            }
-        });
-    }
-
-    private void setupToolbar() {
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    private void updateStatusBar() {
-        int color = 0;
-        if (photoView != null && topInset != 0 && scrollY > 0) {
-            float f = progress(scrollY,
-                    statusBarFullOpacityBottom - topInset * 3,
-                    statusBarFullOpacityBottom - topInset);
-            color = Color.argb((int) (255 * f),
-                    (int) (Color.red(mutedColor) * 0.9),
-                    (int) (Color.green(mutedColor) * 0.9),
-                    (int) (Color.blue(mutedColor) * 0.9));
-        }
-        statusBarColorDrawable.setColor(color);
-    }
-
-    static float progress(float v, float min, float max) {
-        return constrain((v - min) / (max - min), 0, 1);
-    }
-
-    static float constrain(float val, float min, float max) {
-        if (val < min) {
-            return min;
-        } else if (val > max) {
-            return max;
-        } else {
-            return val;
-        }
     }
 
     private void bindViews() {
@@ -240,6 +191,49 @@ public class ArticleDetailFragment extends Fragment implements
         }
     }
 
+    private void updateStatusBar() {
+        int color = 0;
+        if (photoView != null && topInset != 0 && scrollY > 0) {
+            float f = progress(scrollY,
+                    statusBarFullOpacityBottom - topInset * 3,
+                    statusBarFullOpacityBottom - topInset);
+            color = Color.argb((int) (255 * f),
+                    (int) (Color.red(mutedColor) * 0.9),
+                    (int) (Color.green(mutedColor) * 0.9),
+                    (int) (Color.blue(mutedColor) * 0.9));
+        }
+        statusBarColorDrawable.setColor(color);
+    }
+
+    private void addScrollViewTranslations() {
+        scrollView.setCallbacks(new ObservableScrollView.Callbacks() {
+            @Override
+            public void onScrollChanged() {
+                scrollY = scrollView.getScrollY();
+                ViewGroup bodyContainer = (ViewGroup) rootView.findViewById(R.id.body_container);
+                getActivityCast().onUpButtonFloorChanged(itemId, ArticleDetailFragment.this);
+                int translationY = (int) (scrollY - scrollY / PARALLAX_FACTOR);
+                bodyContainer.setTranslationY(-translationY);
+                photoView.setTranslationY(translationY * PARALLAX_FACTOR);
+                updateStatusBar();
+            }
+        });
+    }
+
+    static float progress(float v, float min, float max) {
+        return constrain((v - min) / (max - min), 0, 1);
+    }
+
+    static float constrain(float val, float min, float max) {
+        if (val < min) {
+            return min;
+        } else if (val > max) {
+            return max;
+        } else {
+            return val;
+        }
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return ArticleLoader.newInstanceForItemId(getActivity(), itemId);
@@ -269,15 +263,4 @@ public class ArticleDetailFragment extends Fragment implements
         cursor = null;
         bindViews();
     }
-
-//    public int getUpButtonFloor() {
-//        if (photoContainerView == null || photoView.getHeight() == 0) {
-//            return Integer.MAX_VALUE;
-//        }
-
-    // account for parallax
-//        return isCard
-//                ? (int) photoContainerView.getTranslationY() + photoView.getHeight() - scrollY
-//                : photoView.getHeight() - scrollY;
-//    }
 }
