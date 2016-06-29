@@ -1,7 +1,7 @@
 <resources>
     <!-- detail -->
-    <dimen name="detail_photo_height">384dp</dimen>
-    <dimen name="detail_overlay">192dp</dimen>
+    <dimen name="detail_photo_height">600dp</dimen>
+    <dimen name="detail_overlay">300dp</dimen>
     <dimen name="detail_card_top_margin">384dp</dimen>
     <dimen name="detail_horizontal_margin">64dp</dimen>
     <dimen name="detail_metabar_vert_padding">32dp</dimen>

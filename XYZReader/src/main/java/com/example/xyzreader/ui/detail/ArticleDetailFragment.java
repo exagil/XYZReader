@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.ui.ImageLoaderHelper;
+import com.example.xyzreader.ui.ObservableScrollView;
 import com.example.xyzreader.ui.list.ArticleListActivity;
 
 /**
@@ -41,14 +43,14 @@ public class ArticleDetailFragment extends Fragment implements
     private static final String TAG = "ArticleDetailFragment";
 
     public static final String ARG_ITEM_ID = "item_id";
-    private static final float PARALLAX_FACTOR = 1.25f;
+    private static final float PARALLAX_FACTOR = 1.5f;
 
     private Cursor cursor;
     private long itemId;
     private View rootView;
     private int mutedColor = 0xFF333333;
-    //    private ObservableScrollView scrollView;
-//    private DrawInsetsFrameLayout drawInsetsFrameLayout;
+    private ObservableScrollView scrollView;
+    //    private DrawInsetsFrameLayout drawInsetsFrameLayout;
     private ColorDrawable statusBarColorDrawable;
 
     private int topInset;
@@ -59,6 +61,7 @@ public class ArticleDetailFragment extends Fragment implements
     private int statusBarFullOpacityBottom;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
+    private AppBarLayout appBar;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -109,34 +112,14 @@ public class ArticleDetailFragment extends Fragment implements
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
         View collapsingView = rootView.findViewById(R.id.article_detail_toolbar);
-        if (collapsingView != null) {
-            collapsingToolbarLayout = (CollapsingToolbarLayout) collapsingView;
-        }
+        collapsingToolbarLayout = (CollapsingToolbarLayout) collapsingView;
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        drawInsetsFrameLayout = (DrawInsetsFrameLayout)
-//                rootView.findViewById(R.id.draw_insets_frame_layout);
-//        drawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
-//            @Override
-//            public void onInsetsChanged(Rect insets) {
-//                topInset = insets.top;
-//            }
-//        });
-
-//        scrollView = (ObservableScrollView) rootView.findViewById(R.id.scrollview);
-//        scrollView.setCallbacks(new ObservableScrollView.Callbacks() {
-//            @Override
-//            public void onScrollChanged() {
-//                scrollY = scrollView.getScrollY();
-//                getActivityCast().onUpButtonFloorChanged(itemId, ArticleDetailFragment.this);
-//                photoContainerView.setTranslationY((int) (scrollY - scrollY / PARALLAX_FACTOR));
-//                updateStatusBar();
-//            }
-//        });
-
         photoView = (ImageView) rootView.findViewById(R.id.photo);
-//        photoContainerView = rootView.findViewById(R.id.photo_container);
+        scrollView = (ObservableScrollView) rootView.findViewById(R.id.scrollView);
+        setupToolbar();
+        boolean shouldAddScrollViewTranslations = getResources().getBoolean(R.bool.add_scroll_view_translations);
+        if (shouldAddScrollViewTranslations)
+            addScrollViewTranslations();
 
         statusBarColorDrawable = new ColorDrawable(0);
 
@@ -155,6 +138,26 @@ public class ArticleDetailFragment extends Fragment implements
         return rootView;
     }
 
+    private void addScrollViewTranslations() {
+        scrollView.setCallbacks(new ObservableScrollView.Callbacks() {
+            @Override
+            public void onScrollChanged() {
+                scrollY = scrollView.getScrollY();
+                ViewGroup bodyContainer = (ViewGroup) rootView.findViewById(R.id.body_container);
+                getActivityCast().onUpButtonFloorChanged(itemId, ArticleDetailFragment.this);
+                int translationY = (int) (scrollY - scrollY / PARALLAX_FACTOR);
+                bodyContainer.setTranslationY(-translationY);
+                photoView.setTranslationY(translationY * PARALLAX_FACTOR);
+                updateStatusBar();
+            }
+        });
+    }
+
+    private void setupToolbar() {
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
     private void updateStatusBar() {
         int color = 0;
         if (photoView != null && topInset != 0 && scrollY > 0) {
@@ -167,7 +170,6 @@ public class ArticleDetailFragment extends Fragment implements
                     (int) (Color.blue(mutedColor) * 0.9));
         }
         statusBarColorDrawable.setColor(color);
-//        drawInsetsFrameLayout.setInsetBackground(statusBarColorDrawable);
     }
 
     static float progress(float v, float min, float max) {
