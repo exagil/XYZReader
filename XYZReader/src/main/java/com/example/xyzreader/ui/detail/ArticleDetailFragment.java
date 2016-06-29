@@ -50,7 +50,6 @@ public class ArticleDetailFragment extends Fragment implements
     private View rootView;
     private int mutedColor = 0xFF333333;
     private ObservableNestedScrollView scrollView;
-    //    private DrawInsetsFrameLayout drawInsetsFrameLayout;
     private ColorDrawable statusBarColorDrawable;
 
     private int topInset;
