@@ -101,7 +101,7 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/share_fab"
         style="@style/share_fab"
-        android:elevation="0dp"
+        android:elevation="6dp"
         app:fabSize="normal"
         app:layout_anchor="@id/meta_bar"
         app:layout_anchorGravity="bottom|end"

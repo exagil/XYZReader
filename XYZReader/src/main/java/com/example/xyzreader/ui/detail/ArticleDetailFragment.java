@@ -224,14 +224,6 @@ public class ArticleDetailFragment extends Fragment implements
         });
     }
 
-    private void toggleFabVisibility(int visibility, int height, int width) {
-        ViewGroup.LayoutParams layoutParams = floatingActionButton.getLayoutParams();
-        layoutParams.height = height;
-        layoutParams.width = width;
-        floatingActionButton.requestLayout();
-        floatingActionButton.setVisibility(visibility);
-    }
-
     static float progress(float v, float min, float max) {
         return constrain((v - min) / (max - min), 0, 1);
     }
