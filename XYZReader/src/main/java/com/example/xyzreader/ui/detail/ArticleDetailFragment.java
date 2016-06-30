@@ -61,6 +61,8 @@ public class ArticleDetailFragment extends Fragment implements
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
     private AppBarLayout appBar;
+    private FloatingActionButton floatingActionButton;
+    private View heading;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -107,6 +109,8 @@ public class ArticleDetailFragment extends Fragment implements
         photoView = (ImageView) rootView.findViewById(R.id.photo);
         scrollView = (ObservableNestedScrollView) rootView.findViewById(R.id.scrollView);
         statusBarColorDrawable = new ColorDrawable(0);
+        floatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.share_fab);
+        heading = rootView.findViewById(R.id.meta_bar);
         boolean shouldAddScrollViewTranslations = getResources().getBoolean(R.bool.add_scroll_view_translations);
 
         setupToolbar();
@@ -218,6 +222,14 @@ public class ArticleDetailFragment extends Fragment implements
                 updateStatusBar();
             }
         });
+    }
+
+    private void toggleFabVisibility(int visibility, int height, int width) {
+        ViewGroup.LayoutParams layoutParams = floatingActionButton.getLayoutParams();
+        layoutParams.height = height;
+        layoutParams.width = width;
+        floatingActionButton.requestLayout();
+        floatingActionButton.setVisibility(visibility);
     }
 
     static float progress(float v, float min, float max) {
