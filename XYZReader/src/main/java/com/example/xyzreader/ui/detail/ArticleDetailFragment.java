@@ -21,6 +21,7 @@ import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -226,6 +227,14 @@ public class ArticleDetailFragment extends Fragment implements
 
     static float progress(float v, float min, float max) {
         return constrain((v - min) / (max - min), 0, 1);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home)
+            getActivity().finish();
+        return super.onOptionsItemSelected(item);
     }
 
     static float constrain(float val, float min, float max) {
